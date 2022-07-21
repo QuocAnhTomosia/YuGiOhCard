@@ -16,29 +16,43 @@ class CardDisplay extends StatelessWidget {
           color: Colors.black,
         ),
         OpenContainer(
-          closedBuilder: (context, action) => (
-            SizedBox(
-              width: size.width * 0.7,
-              height: size.width * 0.7 * 1.4,
-              child: Image.network(
-                card.image_url,
-                fit: BoxFit.fill,
+          closedBuilder: (context, action) => (SizedBox(
+            width: size.width * 0.7,
+            height: size.width * 0.7 * 1.4,
+            child: Image.network(
+              card.image_url,
+              fit: BoxFit.fill,
+            ),
+          )),
+          openBuilder: (BuildContext context,
+              void Function({Object? returnValue}) action) {
+            return Scaffold(
+              appBar: AppBar(title: Text(card.name)),
+              body: Center(
+                child: Column(children: [
+                  SizedBox(
+                    width: size.width * 0.7,
+                    height: size.width * 0.7 * 1.4,
+                    child: Image.network(
+                      card.image_url,
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                  SizedBox(
+                    width: size.width,
+                    child: Container(
+                      decoration: BoxDecoration(
+    border: Border.all(color: Colors.blueAccent)
+  ),
+                      child: Text("Description: ${card.desc}")),
+                  ),
+                  SizedBox(
+                    child: Text("Price: ${card.card_prices}"),
+                  ),
+                ]),
               ),
-            )
-          ), openBuilder: (BuildContext context, void Function({Object? returnValue}) action) { 
-            return Scaffold(appBar: AppBar(title: Text(card.name)),
-            body: Center(
-              child: Column(children: [SizedBox(
-                width: size.width * 0.7,
-                height: size.width * 0.7 * 1.4,
-                child: Image.network(
-                  card.image_url,
-                  fit: BoxFit.fill,
-                ),
-              ),
-              SizedBox(width: size.width * 0.7,child: Text(card.desc),)]),
-            ),);
-           },
+            );
+          },
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -70,7 +84,8 @@ class _FavoriteChangeState extends State<FavoriteChange> {
     return Padding(
       padding: const EdgeInsets.only(left: 10.0),
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(primary: Colors.white,onPrimary: Colors.blue),
+          style: ElevatedButton.styleFrom(
+              primary: Colors.white, onPrimary: Colors.blue),
           onPressed: () {
             setState(() {
               status = !status;
