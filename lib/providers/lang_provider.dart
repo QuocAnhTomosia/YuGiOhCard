@@ -1,16 +1,15 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-class LanguageProvider with ChangeNotifier {
-  List<String> languages = ["en,vi"];
+class LanguageProvider {
+ 
   String current = "en";
   LanguageProvider({
     required this.current,
   });
 
-  changeLanguage(String lang) {
-    if (lang != current && languages.contains(current)) {
-      current = lang;
-      notifyListeners();
-    }
+  changeLanguage(String lang,BuildContext context) {
+    current = lang;
+    context.setLocale(Locale(current));
   }
 }

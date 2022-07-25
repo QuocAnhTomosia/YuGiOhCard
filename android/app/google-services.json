@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "811538869177",
+    "project_id": "yugiohcard-d60d8",
+    "storage_bucket": "yugiohcard-d60d8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:811538869177:android:548bf145752e9080846468",
+        "android_client_info": {
+          "package_name": "com.example.yugi_oh_cards"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "811538869177-sa1lfqi2h42b02nvr10utc4fqsilei7q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfntrSN0y-cLXU_CIYyWxilot4Bu6YxJY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "811538869177-sa1lfqi2h42b02nvr10utc4fqsilei7q.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "811538869177-uiti6allrqta99vros8vgtmdsp52mq9j.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.yugiOhCards"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

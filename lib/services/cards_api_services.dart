@@ -6,33 +6,51 @@ class DataResponse {
   final String error;
 
   DataResponse(this.list, this.error);
+  get data => list;
 }
 
 class CardApi {
-  Future<DataResponse> fetchData(String name) async {
+  Future<DataResponse> fetchData(String name, String language) async {
     List<YugiOhCard> cards = [];
-    if (name == "") {
-      return DataResponse([], "no error");
-    }
-    else
-    {
-      try {
-      var options = BaseOptions(
-        baseUrl: "https://db.ygoprodeck.com/api/v7/cardinfo.php?",
-        receiveTimeout: 10000, // 15 seconds
-        connectTimeout: 10000,
-        sendTimeout: 10000,
-      );
-      final Response response = await Dio(options).get(
-        "fname=$name",
-      );
-      response.data["data"]
-          .forEach((element) => cards.add(YugiOhCard.fromJsonApi(element)));
-      return DataResponse(cards, "no error");
-    } on DioError catch (e) {
-        return DataResponse([], handleDioError(e));
 
-    }
+    if (name == "") {
+      try {
+       var options = BaseOptions(
+        baseUrl: "https://db.ygoprodeck.com/api/v7/randomcard.php",
+          receiveTimeout: 10000, //
+          connectTimeout: 10000,
+          sendTimeout: 10000,
+        );
+        final Response response = await Dio(options).get(
+          '',
+        );
+        if(response.data != {})
+        {
+          cards.add(YugiOhCard.fromJsonApi(response.data));
+        }
+        return DataResponse(cards, "no error");
+      } on DioError catch (e) {
+        return DataResponse([], handleDioError(e));
+      }
+    } else {
+      try {
+        var options = BaseOptions(
+          baseUrl: "https://db.ygoprodeck.com/api/v7/cardinfo.php?",
+          receiveTimeout: 10000, //
+          connectTimeout: 10000,
+          sendTimeout: 10000,
+        );
+        final Response response = await Dio(options).get(
+          "fname=$name${language == "en" ? "" : "&language=$language"}",
+        );
+        if(response.data["data"] != []){
+          response.data["data"]
+            .forEach((element) => cards.add(YugiOhCard.fromJsonApi(element)));
+        }
+        return DataResponse(cards, "no error");
+      } on DioError catch (e) {
+        return DataResponse([], handleDioError(e));
+      }
     }
   }
 

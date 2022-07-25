@@ -1,4 +1,6 @@
 // ignore: depend_on_referenced_packages
+// ignore_for_file: avoid_print
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 // ignore: depend_on_referenced_packages
@@ -17,16 +19,16 @@ class CardsSearchingBloc
       emit(CardSearchingLoading());
     });
     on<CardSearchingSubmit>((event, emit) async {
+      // ignore: unrelated_type_equality_checks
       if (state != CardSearchingLoading) {
         emit(CardSearchingLoading());
-        final data = await CardApi().fetchData(event.name);
-        if (data.list.length !=0) {
-          print(data.list);
+        final data = await CardApi().fetchData(event.name,event.language);
+        if (data.list.isNotEmpty) {
+
           emit(CardSearchingLoaded(data: data.list));
         } else {
           emit(CardSearchingError(respone: data.error));
-        }
-        
+        }  
       }
     });
   }
