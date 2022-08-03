@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dio/dio.dart';
 import 'package:yugi_oh_cards/models/card_model.dart';
 
@@ -6,33 +8,102 @@ class DataResponse {
   final String error;
 
   DataResponse(this.list, this.error);
+  get data => list;
 }
 
 class CardApi {
-  Future<DataResponse> fetchData(String name) async {
+  Future<DataResponse> fetchId(List<dynamic> ids, String language) async {
     List<YugiOhCard> cards = [];
-    if (name == "") {
-      return DataResponse([], "no error");
-    }
-    else
-    {
-      try {
+    try {
       var options = BaseOptions(
         baseUrl: "https://db.ygoprodeck.com/api/v7/cardinfo.php?",
-        receiveTimeout: 10000, // 15 seconds
+        receiveTimeout: 10000, //
+        connectTimeout: 10000,
+        sendTimeout: 10000,
+      );
+      String idsString = ids
+          .toString()
+          .replaceAll(' ', '')
+          .replaceAll('[', '')
+          .replaceAll(']', '');
+      final Response response = await Dio(options)
+          .get("id=  $idsString${language == "en" ? "" : "&language=$language"}");
+      if (response.data["data"] != []) {
+        response.data["data"]
+            .forEach((element) => cards.add(YugiOhCard.fromJsonApi(element)));
+      }
+      return DataResponse(cards, "no error");
+    } on DioError catch (e) {
+      return DataResponse([], handleDioError(e));
+    }
+  }
+
+  Future<DataResponse> fetchType(String type, String language) async {
+    Random random = Random();
+    int randomNumber = random.nextInt(100);
+    List<YugiOhCard> cards = [];
+    try {
+      var options = BaseOptions(
+        baseUrl: "https://db.ygoprodeck.com/api/v7/cardinfo.php?",
+        receiveTimeout: 10000, //
         connectTimeout: 10000,
         sendTimeout: 10000,
       );
       final Response response = await Dio(options).get(
-        "fname=$name",
+        "type=$type${language == "en" ? "" : "&language=$language"}"
+        "&offset=$randomNumber"
+        "&num=20",
       );
-      response.data["data"]
-          .forEach((element) => cards.add(YugiOhCard.fromJsonApi(element)));
+      if (response.data["data"] != []) {
+        response.data["data"]
+            .forEach((element) => cards.add(YugiOhCard.fromJsonApi(element)));
+      }
       return DataResponse(cards, "no error");
     } on DioError catch (e) {
-        return DataResponse([], handleDioError(e));
-
+      return DataResponse([], handleDioError(e));
     }
+  }
+
+  Future<DataResponse> fetchData(String name, String language) async {
+    List<YugiOhCard> cards = [];
+
+    if (name == "") {
+      try {
+        var options = BaseOptions(
+          baseUrl: "https://db.ygoprodeck.com/api/v7/randomcard.php",
+          receiveTimeout: 10000, //
+          connectTimeout: 10000,
+          sendTimeout: 10000,
+        );
+        final Response response = await Dio(options).get(
+          '',
+        );
+        if (response.data != {}) {
+          cards.add(YugiOhCard.fromJsonApi(response.data));
+        }
+        return DataResponse(cards, "no error");
+      } on DioError catch (e) {
+        return DataResponse([], handleDioError(e));
+      }
+    } else {
+      try {
+        var options = BaseOptions(
+          baseUrl: "https://db.ygoprodeck.com/api/v7/cardinfo.php?",
+          receiveTimeout: 10000, //
+          connectTimeout: 10000,
+          sendTimeout: 10000,
+        );
+        final Response response = await Dio(options).get(
+          "fname=$name${language == "en" ? "" : "&language=$language"}",
+        );
+        if (response.data["data"] != []) {
+          response.data["data"]
+              .forEach((element) => cards.add(YugiOhCard.fromJsonApi(element)));
+        }
+        return DataResponse(cards, "no error");
+      } on DioError catch (e) {
+        return DataResponse([], handleDioError(e));
+      }
     }
   }
 

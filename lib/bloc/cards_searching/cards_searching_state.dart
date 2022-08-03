@@ -32,3 +32,11 @@ class CardSearchingError extends CardsSearchingState {
   @override
   List<Object> get props => [respone];
 }
+class CardRandomLoaded extends CardsSearchingState {
+  final List<YugiOhCard> data;
+  const CardRandomLoaded({
+    required this.data,
+  });
+  @override
+  List<Object> get props => [data];
+}
